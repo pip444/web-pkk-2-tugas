@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wishlist dengan Like (Simpan Data)</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 20px;
+        }
+        h2 {
+            color: #333;
+        }
+        .wishlist {
+            list-style-type: none;
+            padding: 0;
+            max-width: 400px;
+            margin: 20px auto;
+        }
+        .wishlist-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #fff;
+            padding: 12px 16px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+        }
+        .wishlist-item:hover {
+            transform: scale(1.02);
+        }
+        .like-btn {
+            font-size: 24px;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .liked {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Wishlist</h2>
+    <ul class="wishlist">
+        <li class="wishlist-item" data-id="1">
+            Item 1 <span class="like-btn" onclick="toggleLike(this, 1)">♡</span>
+        </li>
+        <li class="wishlist-item" data-id="2">
+            Item 2 <span class="like-btn" onclick="toggleLike(this, 2)">♡</span>
+        </li>
+        <li class="wishlist-item" data-id="3">
+            Item 3 <span class="like-btn" onclick="toggleLike(this, 3)">♡</span>
+        </li>
+    </ul>
+
+    <script>
+        function toggleLike(element, id) {
+            let likedItems = JSON.parse(localStorage.getItem("likedItems")) || [];
+            
+            if (likedItems.includes(id)) {
+                likedItems = likedItems.filter(item => item !== id);
+                element.classList.remove("liked");
+                element.textContent = "♡";
+            } else {
+                likedItems.push(id);
+                element.classList.add("liked");
+                element.textContent = "❤️";
+            }
+
+            localStorage.setItem("likedItems", JSON.stringify(likedItems));
+        }
+
+        function loadLikes() {
+            let likedItems = JSON.parse(localStorage.getItem("likedItems")) || [];
+            document.querySelectorAll(".wishlist-item").forEach(item => {
+                let id = parseInt(item.getAttribute("data-id"));
+                let likeBtn = item.querySelector(".like-btn");
+
+                if (likedItems.includes(id)) {
+                    likeBtn.classList.add("liked");
+                    likeBtn.textContent = "❤️";
+                }
+            });
+        }
+
+        document.addEventListener("DOMContentLoaded", loadLikes);
+    </script>
+
+</body>
+</html>
